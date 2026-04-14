@@ -8,7 +8,6 @@
 #define TPM_MODULE 1000         // Define a frequência do PWM fpwm = (TPM_CLK / (TPM_MODULE * PS))
 // Valores de duty cycle correspondentes a diferentes larguras de pulso
 uint16_t duty_50  = TPM_MODULE/2;       // 50% de duty cycle
-uint16_t duty_00  = TPM_MODULE * 0;       // 0% de duty cycle
 
 int main(void)
 {
@@ -27,11 +26,11 @@ int main(void)
     pwm_tpm_Ch_Init(TPM2, 1, TPM_PWM_H, GPIOB, 19); // Verde
 
     // Loop infinito
-    for(;;)
+    while(1)
     {
-        pwm_tpm_CnV(TPM2, 0, duty_50);
+        pwm_tpm_CnV(TPM2, 1, duty_50);
         k_msleep(TEMPO);
-        pwm_tpm_CnV(TPM2, 0, duty_00);
+        pwm_tpm_CnV(TPM2, 1, 1000);
         k_msleep(TEMPO);
     }
 
