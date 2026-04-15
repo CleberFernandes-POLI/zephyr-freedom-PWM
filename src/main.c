@@ -24,6 +24,10 @@ int main(void)
     {
         pwm_tpm_CnV(TPM2, 0, duty_Red);
         pwm_tpm_CnV(TPM2, 1, duty_Green);
+        k_msleep(TEMPO);
+        pwm_tpm_CnV(TPM2, 0, 1000);
+        pwm_tpm_CnV(TPM2, 1, 1000);
+        k_msleep(TEMPO);
     }
     return 0;
 }   
