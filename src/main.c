@@ -15,8 +15,31 @@ uint16_t duty_Red    = TPM_MODULE*0.350;
 
 void _foward()
 {
-    
-    return 0;
+    //Motores girando para frente (PTB2 e PTB3)
+    pwm_tpm_CnV(TPM2, 0, duty_Red); //Motor A
+    pwm_tpm_CnV(TPM2, 1, duty_Red); //Motor B
+    pwm_tpm_CnV(TPM1, 0, 2000);     //Motor A
+    pwm_tpm_CnV(TPM1, 1, 2000);     //Motor B
+}
+
+void _left()
+{
+    //Motores curva para esquerda (PTB3)
+    pwm_tpm_CnV(TPM2, 0, 2000);     //Motor A
+    pwm_tpm_CnV(TPM2, 1, duty_Red); //Motor B
+    pwm_tpm_CnV(TPM1, 0, 2000);     //Motor A
+    pwm_tpm_CnV(TPM1, 1, 2000);     //Motor B
+    k_msleep(200);
+}
+
+void _right()
+{
+    //Motores curva para esquerda (PTB2)
+    pwm_tpm_CnV(TPM2, 0, duty_Red); //Motor A
+    pwm_tpm_CnV(TPM2, 1, 2000);     //Motor B
+    pwm_tpm_CnV(TPM1, 0, 2000);     //Motor A
+    pwm_tpm_CnV(TPM1, 1, 2000);     //Motor B
+    k_msleep(200);
 }
 
 void main(void)
@@ -29,11 +52,11 @@ void main(void)
     pwm_tpm_Ch_Init(TPM2, 0, TPM_PWM_H, GPIOB, 18); // vermelho
     pwm_tpm_Ch_Init(TPM2, 1, TPM_PWM_H, GPIOB, 19); // Verde
     //Pinos dos motores (PTD1 e PTD2 para hor)
-    pwm_tpm_Ch_Init(TPM2, 0, TPM_PWM_H, GPIOB, 2); //PTD1 
-    pwm_tpm_Ch_Init(TPM2, 1, TPM_PWM_H, GPIOB, 3); //PTD2 
+    pwm_tpm_Ch_Init(TPM2, 0, TPM_PWM_H, GPIOB, 2); //PTB2 
+    pwm_tpm_Ch_Init(TPM2, 1, TPM_PWM_H, GPIOB, 3); //PTB3 
     //Pinos dos motores (PTC8 e PTC9 para anti-hor)
-    pwm_tpm_Ch_Init(TPM1, 0, TPM_PWM_H, GPIOA, 12); //PTC8
-    pwm_tpm_Ch_Init(TPM1, 1, TPM_PWM_H, GPIOA, 13); //PTC9
+    pwm_tpm_Ch_Init(TPM1, 0, TPM_PWM_H, GPIOA, 12); //PTA12
+    pwm_tpm_Ch_Init(TPM1, 1, TPM_PWM_H, GPIOA, 13); //PTA13
 
     const struct device *input_dev;
     int retA, retB, valA, valB;
@@ -64,26 +87,15 @@ void main(void)
         valB = gpio_pin_get(input_dev, INPUT_PINB);
         if(valA == 0 && valB == 0)
         {
-            foward();
+            _foward();
         }
-        k_msleep(500);
-        // Primeiro vai para frente depois ele vai para trás;
-        pwm_tpm_CnV(TPM2, 0, duty_Red); // Vermelho
-        pwm_tpm_CnV(TPM2, 1, 2000);
-        pwm_tpm_CnV(TPM1, 0, duty_Red);
-        pwm_tpm_CnV(TPM1, 1, 2000);
-        //motor_hor
-        k_msleep(TEMPO);
-        pwm_tpm_CnV(TPM2, 0, 3000);
-        pwm_tpm_CnV(TPM2, 1, duty_Red); // Verde
-        pwm_tpm_CnV(TPM1, 0, 3000);
-        pwm_tpm_CnV(TPM1, 1, duty_Red);
-        //motor_anti-hor
-        k_msleep(TEMPO);
-        pwm_tpm_CnV(TPM2, 0, duty_Red);
-        pwm_tpm_CnV(TPM2, 1, duty_Red); // Verde
-        pwm_tpm_CnV(TPM1, 0, 2000);
-        pwm_tpm_CnV(TPM1, 1, 2000);
-        k_msleep(TEMPO);
+        else if(valA == 1 && valB == 0)
+        {
+            _left();
+        }
+        else if(valA == 1 && valB == 0)
+        {
+            _right();
+        }
     }
 }
