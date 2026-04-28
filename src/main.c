@@ -15,7 +15,7 @@ uint16_t duty_Red    = TPM_MODULE*0.350;
 
 void _foward()
 {
-    //Motores girando para frente (PTB2 e PTB3)
+    //Motores girando para frente (PTB2 e PTB3) - Amarelo
     pwm_tpm_CnV(TPM2, 0, duty_Red); //Motor A
     pwm_tpm_CnV(TPM2, 1, duty_Red); //Motor B
     pwm_tpm_CnV(TPM1, 0, 2000);     //Motor A
@@ -24,7 +24,7 @@ void _foward()
 
 void _left()
 {
-    //Motores curva para esquerda (PTB3)
+    //Motores curva para esquerda (PTB3) - Verde
     pwm_tpm_CnV(TPM2, 0, 2000);     //Motor A
     pwm_tpm_CnV(TPM2, 1, duty_Red); //Motor B
     pwm_tpm_CnV(TPM1, 0, 2000);     //Motor A
@@ -34,7 +34,7 @@ void _left()
 
 void _right()
 {
-    //Motores curva para esquerda (PTB2)
+    //Motores curva para esquerda (PTB2) - Vermelho
     pwm_tpm_CnV(TPM2, 0, duty_Red); //Motor A
     pwm_tpm_CnV(TPM2, 1, 2000);     //Motor B
     pwm_tpm_CnV(TPM1, 0, 2000);     //Motor A
