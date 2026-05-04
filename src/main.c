@@ -10,8 +10,8 @@
 // Define o valor do registrador MOD do TPM para configurar o período do PWM
 #define TPM_MODULE   2000                  // Define a frequência do PWM fpwm = (TPM_CLK / (TPM_MODULE * PS))
 // Valores de duty cycle correspondentes a diferentes larguras de pulso
-uint16_t duty_Red    = TPM_MODULE*0.350;       
- 
+uint16_t duty_Red    = TPM_MODULE*0.120;       
+uint16_t duty_Cur    = TPM_MODULE*0.500; 
 
 void _foward()
 {
@@ -26,23 +26,21 @@ void _left()
 {
     //Motores curva para esquerda (PTB3) - Verde
     pwm_tpm_CnV(TPM2, 0, 2000);     //Motor A
-    pwm_tpm_CnV(TPM2, 1, duty_Red); //Motor B
-    pwm_tpm_CnV(TPM1, 0, 2000);     //Motor A
+    pwm_tpm_CnV(TPM2, 1, duty_Cur); //Motor B
+    pwm_tpm_CnV(TPM1, 0, duty_Cur);     //Motor A
     pwm_tpm_CnV(TPM1, 1, 2000);     //Motor B
-    k_msleep(200);
 }
 
 void _right()
 {
     //Motores curva para esquerda (PTB2) - Vermelho
-    pwm_tpm_CnV(TPM2, 0, duty_Red); //Motor A
+    pwm_tpm_CnV(TPM2, 0, duty_Cur); //Motor A
     pwm_tpm_CnV(TPM2, 1, 2000);     //Motor B
     pwm_tpm_CnV(TPM1, 0, 2000);     //Motor A
-    pwm_tpm_CnV(TPM1, 1, 2000);     //Motor B
-    k_msleep(200);
+    pwm_tpm_CnV(TPM1, 1, duty_Cur);     //Motor B
 }
 
-void main(void)
+int main()
 {
     pwm_tpm_Init(TPM2, TPM_PLLFLL, TPM_MODULE, TPM_CLK, PS_128, EDGE_PWM);
     pwm_tpm_Init(TPM1, TPM_PLLFLL, TPM_MODULE, TPM_CLK, PS_128, EDGE_PWM);
@@ -85,11 +83,11 @@ void main(void)
     {
         valA = gpio_pin_get(input_dev, INPUT_PINA);
         valB = gpio_pin_get(input_dev, INPUT_PINB);
-        if(valA == 0 && valB == 0)
+        if(valA == 0 && valB == 0 || valA == 1 && valB == 1)
         {
             _foward();
         }
-        else if(valA == 1 && valB == 0)
+        else if(valA == 0 && valB == 1)
         {
             _left();
         }
